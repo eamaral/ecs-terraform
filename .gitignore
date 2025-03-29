@@ -1,29 +1,3 @@
 # Ignora arquivos gerados pelo Terraform
 .terraform/
-*.tfstate
-*.tfstate.*
-.terraform.lock.hcl
-
-# Ignora arquivos de variáveis sensíveis
-*.tfvars
-*.tfvars.json
-
-# Ignora backups gerados pelo Terraform
-*.backup
-
-# Ignora arquivos de crash logs
-crash.log
-
-# Ignora arquivos de override locais
-*.override.tf
-*.override.tf.json
-
-# Ignora arquivos de planos locais
-terraform.tfplan
-
-# Permite outputs e state quando necessário (opcional)
-# !terraform.tfstate
-# !terraform.tfstate.backup
-
-# Exclui provider pesado que causa erro no push
 .terraform/providers/
