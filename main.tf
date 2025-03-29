@@ -21,11 +21,6 @@ resource "aws_cloudwatch_log_group" "ecs_logs" {
   retention_in_days = 7
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_task_cognito_access" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
-}
-
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecsTaskExecutionRole"
 
@@ -48,6 +43,11 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_cognito_access" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+}
+
 resource "aws_ecs_task_definition" "fastfood_task" {
   family                   = "fastfood-task"
   network_mode             = "awsvpc"
@@ -55,6 +55,7 @@ resource "aws_ecs_task_definition" "fastfood_task" {
   cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
     {
@@ -70,8 +71,9 @@ resource "aws_ecs_task_definition" "fastfood_task" {
       ],
       environment = [
         { name = "AWS_REGION", value = "us-east-1" },
-        { name = "COGNITO_CLIENT_ID", value = "61mldv087p6p3bl13c5vor1tn0" },
-        { name = "COGNITO_USER_POOL_ID", value = "us-east-1_9hFbR7oTP" },
+        { name = "AWS_SDK_LOAD_CONFIG", value = "1" },
+        { name = "COGNITO_CLIENT_ID", value = "4opmve1ragnaft1lrv431q4t3s" },
+        { name = "COGNITO_USER_POOL_ID", value = "us-east-1_iiITt7551" },
         { name = "DB_HOST", value = "fastfood-db.c2veeay0m6ri.us-east-1.rds.amazonaws.com" },
         { name = "DB_PORT", value = "3306" },
         { name = "DB_NAME", value = "fastfood" },
@@ -136,5 +138,8 @@ resource "aws_ecs_service" "fastfood_service" {
     container_port   = 3000
   }
 
-  depends_on = [aws_iam_role_policy_attachment.ecs_task_execution_role_policy]
+  depends_on = [
+    aws_iam_role_policy_attachment.ecs_task_execution_role_policy,
+    aws_iam_role_policy_attachment.ecs_task_cognito_access
+  ]
 }
