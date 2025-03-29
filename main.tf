@@ -1,15 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
-}
-
-variable "vpc_id" {}
-variable "private_subnets" {
-  type = list(string)
-}
-variable "alb_target_group_arn" {}
-variable "alb_sg_id" {}
-variable "ecr_image_url" {
-  description = "Imagem do backend no ECR"
+  region = var.region
 }
 
 resource "aws_ecs_cluster" "fastfood_cluster" {
@@ -57,46 +47,7 @@ resource "aws_ecs_task_definition" "fastfood_task" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
 
-  container_definitions = jsonencode([
-    {
-      name      = "fastfood-backend",
-      image     = var.ecr_image_url,
-      essential = true,
-      portMappings = [
-        {
-          containerPort = 3000,
-          hostPort      = 3000,
-          protocol      = "tcp"
-        }
-      ],
-      environment = [
-        { name = "AWS_REGION", value = "us-east-1" },
-        { name = "AWS_SDK_LOAD_CONFIG", value = "1" },
-        { name = "COGNITO_CLIENT_ID", value = "4opmve1ragnaft1lrv431q4t3s" },
-        { name = "COGNITO_USER_POOL_ID", value = "us-east-1_iiITt7551" },
-        { name = "DB_HOST", value = "fastfood-db.c2veeay0m6ri.us-east-1.rds.amazonaws.com" },
-        { name = "DB_PORT", value = "3306" },
-        { name = "DB_NAME", value = "fastfood" },
-        { name = "DB_USER", value = "admin" },
-        { name = "DB_PASS", value = "Senha123" },
-        { name = "LOCAL_PORT", value = "3000" },
-        { name = "NODE_ENV", value = "production" },
-        { name = "MERCADOPAGO_ACCESS_TOKEN", value = "TEST-7513763222088119-102723-066d60f2c69bc1f0a4f4d4163d2b448a-163051303" },
-        { name = "MERCADOPAGO_PUBLIC_KEY", value = "TEST-5ae40bfd-d399-475d-914f-79a45924cf87" },
-        { name = "EMAIL_USER", value = "erik.fernandes87@gmail.com" },
-        { name = "EMAIL_PASS", value = "nanf erny zkzm vepg" },
-        { name = "CPF_API_URL", value = "https://qvt7gb3vnb.execute-api.us-east-1.amazonaws.com/prod/auth/cpf" }
-      ],
-      logConfiguration = {
-        logDriver = "awslogs",
-        options = {
-          awslogs-group         = aws_cloudwatch_log_group.ecs_logs.name,
-          awslogs-region        = "us-east-1",
-          awslogs-stream-prefix = "ecs"
-        }
-      }
-    }
-  ])
+  container_definitions = jsonencode([var.container_definition])
 }
 
 resource "aws_security_group" "ecs_service_sg" {
