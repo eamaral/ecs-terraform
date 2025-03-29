@@ -1,3 +1,9 @@
-# Ignora arquivos gerados pelo Terraform
+# Ignora tudo da pasta .terraform, exceto o lock
 .terraform/
-.terraform/providers/
+!terraform.tfstate
+!terraform.tfstate.backup
+!.terraform.lock.hcl
+
+# Não versionar arquivos de variáveis privadas
+terraform.tfvars
+*.tfvars
