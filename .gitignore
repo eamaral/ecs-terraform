@@ -6,4 +6,5 @@
 
 # Não versionar arquivos de variáveis privadas
 terraform.tfvars
+terraform.tfvars
 *.tfvars
