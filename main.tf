@@ -47,7 +47,87 @@ resource "aws_ecs_task_definition" "fastfood_task" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
 
-  container_definitions = jsonencode([var.container_definition])
+  container_definitions = jsonencode([
+  {
+    name      = "fastfood-backend"
+    image     = var.ecr_image_url
+    essential = true
+    portMappings = [
+      {
+        containerPort = 3000
+        hostPort      = 3000
+        protocol      = "tcp"
+      }
+    ]
+    environment = [
+      {
+        name  = "DB_HOST"
+        value = var.db_host
+      },
+      {
+        name  = "DB_PORT"
+        value = "3306"
+      },
+      {
+        name  = "DB_NAME"
+        value = "fastfood"
+      },
+      {
+        name  = "DB_USER"
+        value = var.db_username
+      },
+      {
+        name  = "DB_PASS"
+        value = var.db_password
+      },
+      {
+        name  = "COGNITO_CLIENT_ID"
+        value = var.cognito_client_id
+      },
+      {
+        name  = "COGNITO_USER_POOL_ID"
+        value = var.cognito_user_pool_id
+      },
+      {
+        name  = "MERCADOPAGO_ACCESS_TOKEN"
+        value = var.mercadopago_access_token
+      },
+      {
+        name  = "MERCADOPAGO_PUBLIC_KEY"
+        value = var.mercadopago_public_key
+      },
+      {
+        name  = "EMAIL_USER"
+        value = var.email_user
+      },
+      {
+        name  = "EMAIL_PASS"
+        value = var.email_pass
+      },
+      {
+        name  = "CPF_API_URL"
+        value = "https://qvt7gb3vnb.execute-api.us-east-1.amazonaws.com/prod/auth/cpf"
+      },
+      {
+        name  = "AWS_REGION"
+        value = var.region
+      },
+      {
+        name  = "PORT"
+        value = "3000"
+      }
+    ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/fastfood-backend"
+        awslogs-region        = var.region
+        awslogs-stream-prefix = "ecs"
+      }
+    }
+  }
+])
+
 }
 
 resource "aws_security_group" "ecs_service_sg" {

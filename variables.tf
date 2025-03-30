@@ -28,8 +28,53 @@ variable "alb_sg_id" {
   default     = ""
 }
 
-variable "container_definition" {
-  description = "Definição do container ECS"
-  type        = any
-  default     = null
+variable "ecr_image_url" {
+  description = "URL da imagem do container no ECR"
+  type        = string
+  default     = "124355673305.dkr.ecr.us-east-1.amazonaws.com/fastfood-backend:latest"
+}
+
+variable "db_host" {
+  description = "Endpoint do banco RDS"
+  type        = string
+}
+
+variable "db_username" {
+  description = "Usuário do banco"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Senha do banco"
+  type        = string
+}
+
+variable "mercadopago_access_token" {
+  description = "Token de acesso MercadoPago"
+  type        = string
+}
+
+variable "mercadopago_public_key" {
+  description = "Chave pública MercadoPago"
+  type        = string
+}
+
+variable "email_user" {
+  description = "E-mail do remetente"
+  type        = string
+}
+
+variable "email_pass" {
+  description = "Senha do e-mail (app password)"
+  type        = string
+}
+
+variable "cognito_user_pool_id" {
+  description = "ID do User Pool Cognito"
+  type        = string
+}
+
+variable "cognito_client_id" {
+  description = "Client ID do Cognito"
+  type        = string
 }
