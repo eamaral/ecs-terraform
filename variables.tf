@@ -11,7 +11,7 @@ variable "vpc_id" {
 }
 
 variable "private_subnets" {
-  description = "Subnets privadas"
+  description = "Lista de subnets privadas"
   type        = list(string)
   default     = []
 }
@@ -29,52 +29,73 @@ variable "alb_sg_id" {
 }
 
 variable "ecr_image_url" {
-  description = "URL da imagem do container no ECR"
+  description = "URL da imagem no ECR"
   type        = string
   default     = "124355673305.dkr.ecr.us-east-1.amazonaws.com/fastfood-backend:latest"
 }
 
 variable "db_host" {
-  description = "Endpoint do banco RDS"
+  description = "Endpoint do banco de dados RDS (sem porta)"
   type        = string
+  default     = ""
+}
+
+variable "db_port" {
+  description = "Porta do banco de dados"
+  type        = number
+  default     = 3306
+}
+
+variable "db_name" {
+  description = "Nome do banco de dados"
+  type        = string
+  default     = "fastfood"
 }
 
 variable "db_username" {
-  description = "Usuário do banco"
+  description = "Usuário do banco de dados"
   type        = string
+  default     = ""
 }
 
 variable "db_password" {
-  description = "Senha do banco"
+  description = "Senha do banco de dados"
   type        = string
-}
-
-variable "mercadopago_access_token" {
-  description = "Token de acesso MercadoPago"
-  type        = string
-}
-
-variable "mercadopago_public_key" {
-  description = "Chave pública MercadoPago"
-  type        = string
-}
-
-variable "email_user" {
-  description = "E-mail do remetente"
-  type        = string
-}
-
-variable "email_pass" {
-  description = "Senha do e-mail (app password)"
-  type        = string
+  default     = ""
 }
 
 variable "cognito_user_pool_id" {
-  description = "ID do User Pool Cognito"
+  description = "ID do User Pool do Cognito"
   type        = string
+  default     = ""
 }
 
 variable "cognito_client_id" {
   description = "Client ID do Cognito"
   type        = string
+  default     = ""
+}
+
+variable "mercadopago_access_token" {
+  description = "Token de acesso ao Mercado Pago"
+  type        = string
+  default     = ""
+}
+
+variable "mercadopago_public_key" {
+  description = "Chave pública do Mercado Pago"
+  type        = string
+  default     = ""
+}
+
+variable "email_user" {
+  description = "Usuário do e-mail (remetente)"
+  type        = string
+  default     = ""
+}
+
+variable "email_pass" {
+  description = "Senha do e-mail (app password)"
+  type        = string
+  default     = ""
 }
